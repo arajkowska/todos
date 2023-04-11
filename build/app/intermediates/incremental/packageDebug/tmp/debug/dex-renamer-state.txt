@@ -1,0 +1,4 @@
+#Wed Apr 05 19:20:04 CEST 2023
+base.0=/Users/janlewandowski/Desktop/knam_example/build/app/intermediates/dex/debug/mergeDexDebug/classes.dex
+renamed.0=classes.dex
+path.0=classes.dex
