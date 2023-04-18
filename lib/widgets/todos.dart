@@ -16,12 +16,17 @@ class _TodosState extends State<Todos> {
   final controller = TextEditingController();
   final todos = <String>[];
 
-  void addTodo(String todo) {
-    // TODO: 1. write logic for adding a todo
+  void addTodo() {
+    setState(() {
+      todos.insert(0, controller.text);
+    });
+    controller.clear();
   }
 
   void removeTodo(String todo) {
-    // TODO: 4. write logic for removing a todo
+    setState(() {
+      todos.remove(todo);
+    });
   }
 
   @override
@@ -61,24 +66,32 @@ class _TodosState extends State<Todos> {
                 IconButton(
                   icon: const Icon(Icons.add),
                   color: Colors.black,
-                  onPressed: () {
-                    // TODO: 2. call addTodo
-                  },
+                  onPressed: addTodo,
                 ),
               ],
             ),
             const SizedBox(height: 16),
             Expanded(
-              // TODO: 6. we should be able to change order of todos
-              child: SingleChildScrollView(
-                child: Column(
-                  // TODO: 3. todos should be properly ordered
-                  children: todos
-                      .map((todo) => TodoTile(
-                            text: todo,
-                          ))
-                      .toList(),
-                ),
+              child: ReorderableListView(
+                onReorder: (oldIndex, newIndex) {
+                  if (oldIndex < newIndex) {
+                    newIndex -= 1;
+                  }
+
+                  setState(() {
+                    final todo = todos.removeAt(oldIndex);
+                    todos.insert(newIndex, todo);
+                  });
+                },
+                children: todos
+                    .map((todo) => TodoTile(
+                          key: UniqueKey(),
+                          text: todo,
+                          onRemove: () {
+                            removeTodo(todo);
+                          },
+                        ))
+                    .toList(),
               ),
             ),
           ],
